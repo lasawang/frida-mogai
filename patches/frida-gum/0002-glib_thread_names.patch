@@ -1,0 +1,33 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: builder <builder@localhost>
+Subject: [PATCH 0002] Replace GLib thread pool and loop names in frida-gum
+
+---
+ gum/backend-posix/gumtls-posix.c | 2 +-
+ gum/gumscriptscheduler.c         | 4 ++--
+ bindings/gumjs/gumscriptbackend.c| 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/gum/backend-posix/gumtls-posix.c b/gum/backend-posix/gumtls-posix.c
+index 1111111..2222222 100644
+--- a/gum/backend-posix/gumtls-posix.c
++++ b/gum/backend-posix/gumtls-posix.c
+@@ -1,1 +1,1 @@
+-  pthread_setname_np (pthread_self (), "gmain");
++  pthread_setname_np (pthread_self (), "@@GMAIN@@");
+diff --git a/gum/gumscriptscheduler.c b/gum/gumscriptscheduler.c
+index 1111111..2222222 100644
+--- a/gum/gumscriptscheduler.c
++++ b/gum/gumscriptscheduler.c
+@@ -1,2 +1,2 @@
+-  self->pool = g_thread_pool_new ("pool-frida-js",
+-  self->thread = g_thread_new ("gum-js-loop",
++  self->pool = g_thread_pool_new ("@@POOL_FRIDA@@",
++  self->thread = g_thread_new ("@@GUM_JS_LOOP@@",
+diff --git a/bindings/gumjs/gumscriptbackend.c b/bindings/gumjs/gumscriptbackend.c
+index 1111111..2222222 100644
+--- a/bindings/gumjs/gumscriptbackend.c
++++ b/bindings/gumjs/gumscriptbackend.c
+@@ -1,1 +1,1 @@
+-  priv->js_thread = g_thread_new ("gum-js-loop", gum_script_backend_js_thread_run, self);
++  priv->js_thread = g_thread_new ("@@GUM_JS_LOOP@@", gum_script_backend_js_thread_run, self);

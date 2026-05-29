@@ -1,0 +1,41 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: builder <builder@localhost>
+Subject: [PATCH 0001] Replace GumScript and LIBFRIDA internal strings
+
+---
+ gum/gumscript.c              | 4 ++--
+ gum/gumscriptbackend.c       | 2 +-
+ gum/guminvocationlistener.c  | 2 +-
+ gum/gum.c                    | 2 +-
+ 4 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/gum/gumscript.c b/gum/gumscript.c
+index 1111111..2222222 100644
+--- a/gum/gumscript.c
++++ b/gum/gumscript.c
+@@ -1,2 +1,2 @@
+-  g_set_prgname ("GumScript");
+-  static const char * GUM_SCRIPT_RUNTIME = "GumScript";
++  g_set_prgname ("@@GUMSCRIPT@@");
++  static const char * GUM_SCRIPT_RUNTIME = "@@GUMSCRIPT@@";
+diff --git a/gum/gumscriptbackend.c b/gum/gumscriptbackend.c
+index 1111111..2222222 100644
+--- a/gum/gumscriptbackend.c
++++ b/gum/gumscriptbackend.c
+@@ -1,1 +1,1 @@
+-#define GUM_SCRIPT_BACKEND_NAME "GumScript"
++#define GUM_SCRIPT_BACKEND_NAME "@@GUMSCRIPT@@"
+diff --git a/gum/guminvocationlistener.c b/gum/guminvocationlistener.c
+index 1111111..2222222 100644
+--- a/gum/guminvocationlistener.c
++++ b/gum/guminvocationlistener.c
+@@ -1,1 +1,1 @@
+-#define GUM_LISTENER_TAG "GumInvocationListener"
++#define GUM_LISTENER_TAG "@@GUMSCRIPT@@Listener"
+diff --git a/gum/gum.c b/gum/gum.c
+index 1111111..2222222 100644
+--- a/gum/gum.c
++++ b/gum/gum.c
+@@ -1,1 +1,1 @@
+-static const gchar * gum_module_name = "LIBFRIDA";
++static const gchar * gum_module_name = "@@LIBFRIDA@@";

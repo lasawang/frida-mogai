@@ -1,0 +1,33 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: builder <builder@localhost>
+Subject: [PATCH 0007] Replace gmain thread name and pool-frida naming
+
+---
+ lib/base/main-context.vala | 2 +-
+ server/server.vala         | 4 ++--
+ lib/agent/agent.vala       | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/lib/base/main-context.vala b/lib/base/main-context.vala
+index 1111111..2222222 100644
+--- a/lib/base/main-context.vala
++++ b/lib/base/main-context.vala
+@@ -1,1 +1,1 @@
+-		var thread = new Thread<bool> ("gmain", () => {
++		var thread = new Thread<bool> ("@@GMAIN@@", () => {
+diff --git a/server/server.vala b/server/server.vala
+index 1111111..2222222 100644
+--- a/server/server.vala
++++ b/server/server.vala
+@@ -1,2 +1,2 @@
+-		var pool = new ThreadPool<Client>.with_owned_data ("pool-frida",
+-		var thread = new Thread<bool> ("gdbus", () => {
++		var pool = new ThreadPool<Client>.with_owned_data ("@@POOL_FRIDA@@",
++		var thread = new Thread<bool> ("@@GDBUS@@", () => {
+diff --git a/lib/agent/agent.vala b/lib/agent/agent.vala
+index 1111111..2222222 100644
+--- a/lib/agent/agent.vala
++++ b/lib/agent/agent.vala
+@@ -1,1 +1,1 @@
+-		main_thread = new Thread<bool> ("gmain", () => {
++		main_thread = new Thread<bool> ("@@GMAIN@@", () => {

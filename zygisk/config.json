@@ -1,0 +1,5 @@
+{
+  "interaction": "listen",
+  "on_port_conflict": "pick-next",
+  "on_load": "resume"
+}

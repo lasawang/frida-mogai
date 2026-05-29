@@ -1,0 +1,33 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: builder <builder@localhost>
+Subject: [PATCH 0002] Replace re.frida.server D-Bus name and process identity
+
+---
+ server/server.vala            | 4 ++--
+ lib/base/dbus.vala            | 2 +-
+ src/linux/linux-host-session.vala | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/server/server.vala b/server/server.vala
+index 1111111..2222222 100644
+--- a/server/server.vala
++++ b/server/server.vala
+@@ -1,4 +1,4 @@
+-		private const string LISTEN_ADDRESS = "re.frida.server";
+-		prctl (PR_SET_NAME, "frida-server");
++		private const string LISTEN_ADDRESS = "@@RE_FRIDA_SERVER@@";
++		prctl (PR_SET_NAME, "@@SERVER_NAME@@");
+diff --git a/lib/base/dbus.vala b/lib/base/dbus.vala
+index 1111111..2222222 100644
+--- a/lib/base/dbus.vala
++++ b/lib/base/dbus.vala
+@@ -1,1 +1,1 @@
+-	private const string DBUS_NAME = "re.frida.server";
++	private const string DBUS_NAME = "@@RE_FRIDA_SERVER@@";
+diff --git a/src/linux/linux-host-session.vala b/src/linux/linux-host-session.vala
+index 1111111..2222222 100644
+--- a/src/linux/linux-host-session.vala
++++ b/src/linux/linux-host-session.vala
+@@ -1,1 +1,1 @@
+-		private const string SERVER_DBUS_NAME = "re.frida.server";
++		private const string SERVER_DBUS_NAME = "@@RE_FRIDA_SERVER@@";

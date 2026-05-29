@@ -1,0 +1,39 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: builder <builder@localhost>
+Subject: [PATCH 0005] Replace frida_agent_main export symbol
+
+---
+ lib/agent/agent.vala              | 2 +-
+ lib/agent/agent-glue.c            | 2 +-
+ src/linux/linux-host-session.vala | 2 +-
+ lib/loader/loader.vala            | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/lib/agent/agent.vala b/lib/agent/agent.vala
+index 1111111..2222222 100644
+--- a/lib/agent/agent.vala
++++ b/lib/agent/agent.vala
+@@ -1,1 +1,1 @@
+-	public const string AGENT_ENTRYPOINT = "frida_agent_main";
++	public const string AGENT_ENTRYPOINT = "@@FRIDA_AGENT_MAIN@@";
+diff --git a/lib/agent/agent-glue.c b/lib/agent/agent-glue.c
+index 1111111..2222222 100644
+--- a/lib/agent/agent-glue.c
++++ b/lib/agent/agent-glue.c
+@@ -1,1 +1,1 @@
+-__attribute__ ((visibility ("default"))) void frida_agent_main (const char * data, bool * stay_resident, void * injector_state)
++__attribute__ ((visibility ("default"))) void @@FRIDA_AGENT_MAIN@@ (const char * data, bool * stay_resident, void * injector_state)
+diff --git a/src/linux/linux-host-session.vala b/src/linux/linux-host-session.vala
+index 1111111..2222222 100644
+--- a/src/linux/linux-host-session.vala
++++ b/src/linux/linux-host-session.vala
+@@ -1,1 +1,1 @@
+-		private const string AGENT_ENTRYPOINT = "frida_agent_main";
++		private const string AGENT_ENTRYPOINT = "@@FRIDA_AGENT_MAIN@@";
+diff --git a/lib/loader/loader.vala b/lib/loader/loader.vala
+index 1111111..2222222 100644
+--- a/lib/loader/loader.vala
++++ b/lib/loader/loader.vala
+@@ -1,1 +1,1 @@
+-		private const string ENTRYPOINT = "frida_agent_main";
++		private const string ENTRYPOINT = "@@FRIDA_AGENT_MAIN@@";

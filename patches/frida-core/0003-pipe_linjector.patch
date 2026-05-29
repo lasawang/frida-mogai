@@ -1,0 +1,25 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: builder <builder@localhost>
+Subject: [PATCH 0003] Replace linjector pipe naming
+
+---
+ src/linux/frida-helper-backend.vala | 4 ++--
+ lib/pipe/pipe-posix.c               | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/linux/frida-helper-backend.vala b/src/linux/frida-helper-backend.vala
+index 1111111..2222222 100644
+--- a/src/linux/frida-helper-backend.vala
++++ b/src/linux/frida-helper-backend.vala
+@@ -1,4 +1,4 @@
+-		private const string PIPE_PREFIX = "linjector";
+-		var fifo_path = "/tmp/linjector-%u".printf (pid);
++		private const string PIPE_PREFIX = "@@LINJECTOR@@";
++		var fifo_path = "/tmp/@@LINJECTOR@@-%u".printf (pid);
+diff --git a/lib/pipe/pipe-posix.c b/lib/pipe/pipe-posix.c
+index 1111111..2222222 100644
+--- a/lib/pipe/pipe-posix.c
++++ b/lib/pipe/pipe-posix.c
+@@ -1,1 +1,1 @@
+-#define PIPE_NAME_PREFIX "linjector-"
++#define PIPE_NAME_PREFIX "@@LINJECTOR@@-"

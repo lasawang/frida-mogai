@@ -1,0 +1,6 @@
+.venv/
+build/
+frida_src/
+patches_applied/
+__pycache__/
+*.pyc

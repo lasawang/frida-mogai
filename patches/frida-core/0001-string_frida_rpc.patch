@@ -1,0 +1,33 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: builder <builder@localhost>
+Subject: [PATCH 0001] Replace frida:rpc protocol identifier
+
+---
+ src/droidy/droidy-client.vala | 2 +-
+ lib/interfaces/session.vala   | 2 +-
+ lib/base/rpc.vala             | 4 ++--
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/src/droidy/droidy-client.vala b/src/droidy/droidy-client.vala
+index 1111111..2222222 100644
+--- a/src/droidy/droidy-client.vala
++++ b/src/droidy/droidy-client.vala
+@@ -1,1 +1,1 @@
+-			string protocol = "frida:rpc";
++			string protocol = "@@FRIDA_RPC@@";
+diff --git a/lib/interfaces/session.vala b/lib/interfaces/session.vala
+index 1111111..2222222 100644
+--- a/lib/interfaces/session.vala
++++ b/lib/interfaces/session.vala
+@@ -1,1 +1,1 @@
+-	private const string FRIDA_RPC_PROTOCOL = "frida:rpc";
++	private const string FRIDA_RPC_PROTOCOL = "@@FRIDA_RPC@@";
+diff --git a/lib/base/rpc.vala b/lib/base/rpc.vala
+index 1111111..2222222 100644
+--- a/lib/base/rpc.vala
++++ b/lib/base/rpc.vala
+@@ -1,2 +1,2 @@
+-		private const string RPC_PROTOCOL = "frida:rpc";
+-		if (protocol != "frida:rpc")
++		private const string RPC_PROTOCOL = "@@FRIDA_RPC@@";
++		if (protocol != "@@FRIDA_RPC@@")

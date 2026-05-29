@@ -1,0 +1,23 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: builder <builder@localhost>
+Subject: [PATCH 0006] Replace gum-js-loop thread name
+
+---
+ lib/agent/agent.vala       | 2 +-
+ lib/base/session.vala      | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/lib/agent/agent.vala b/lib/agent/agent.vala
+index 1111111..2222222 100644
+--- a/lib/agent/agent.vala
++++ b/lib/agent/agent.vala
+@@ -1,1 +1,1 @@
+-		var thread = new Thread<bool> ("gum-js-loop", () => {
++		var thread = new Thread<bool> ("@@GUM_JS_LOOP@@", () => {
+diff --git a/lib/base/session.vala b/lib/base/session.vala
+index 1111111..2222222 100644
+--- a/lib/base/session.vala
++++ b/lib/base/session.vala
+@@ -1,1 +1,1 @@
+-		private const string JS_THREAD_NAME = "gum-js-loop";
++		private const string JS_THREAD_NAME = "@@GUM_JS_LOOP@@";

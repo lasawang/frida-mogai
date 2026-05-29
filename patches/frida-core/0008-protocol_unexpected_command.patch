@@ -1,0 +1,53 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: builder <builder@localhost>
+Subject: [PATCH 0008] Handle unexpected protocol commands silently
+
+When a non-frida client connects and sends unexpected data,
+close the connection immediately instead of returning an error
+message that reveals the server's identity.
+
+---
+ server/server.vala         | 18 ++++++++++++------
+ lib/base/dbus.vala         |  8 +++++---
+ 2 files changed, 17 insertions(+), 9 deletions(-)
+
+diff --git a/server/server.vala b/server/server.vala
+index 1111111..2222222 100644
+--- a/server/server.vala
++++ b/server/server.vala
+@@ -1,8 +1,12 @@
+ 		private async void handle_raw_connection (IOStream stream) {
+-			try {
+-				var input = new DataInputStream (stream.input_stream);
+-				var line = yield input.read_line_async ();
+-				if (line == null || !line.has_prefix ("AUTH")) {
+-					yield send_error (stream, "Unexpected command");
+-					return;
+-				}
++			var input = new DataInputStream (stream.input_stream);
++			string? line = null;
++			try {
++				line = yield input.read_line_async ();
++			} catch (Error e) {
++				stream.close_async.begin ();
++				return;
++			}
++			if (line == null || !is_valid_auth_command (line)) {
++				stream.close_async.begin ();
++				return;
++			}
+diff --git a/lib/base/dbus.vala b/lib/base/dbus.vala
+index 1111111..2222222 100644
+--- a/lib/base/dbus.vala
++++ b/lib/base/dbus.vala
+@@ -1,5 +1,7 @@
+-	private void on_unexpected_message (string raw_message) {
+-		var reply = "ERROR \"Unexpected command\"\r\n";
+-		send_raw (reply);
++	private void on_unexpected_message (string raw_message) {
++		disconnect_client ();
+ 	}
++
++	private bool is_valid_auth_command (string line) {
++		return line.has_prefix ("AUTH");
++	}

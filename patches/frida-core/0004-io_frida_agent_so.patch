@@ -1,0 +1,39 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: builder <builder@localhost>
+Subject: [PATCH 0004] Replace frida-agent.so filename
+
+---
+ src/linux/linux-host-session.vala   | 2 +-
+ src/darwin/darwin-host-session.vala  | 2 +-
+ lib/loader/loader.vala              | 2 +-
+ inject/inject.vala                  | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/src/linux/linux-host-session.vala b/src/linux/linux-host-session.vala
+index 1111111..2222222 100644
+--- a/src/linux/linux-host-session.vala
++++ b/src/linux/linux-host-session.vala
+@@ -1,1 +1,1 @@
+-		private const string AGENT_FILENAME = "frida-agent.so";
++		private const string AGENT_FILENAME = "@@FRIDA_AGENT_SO@@";
+diff --git a/src/darwin/darwin-host-session.vala b/src/darwin/darwin-host-session.vala
+index 1111111..2222222 100644
+--- a/src/darwin/darwin-host-session.vala
++++ b/src/darwin/darwin-host-session.vala
+@@ -1,1 +1,1 @@
+-		private const string AGENT_FILENAME = "frida-agent.dylib";
++		private const string AGENT_FILENAME = "@@FRIDA_AGENT_SO@@";
+diff --git a/lib/loader/loader.vala b/lib/loader/loader.vala
+index 1111111..2222222 100644
+--- a/lib/loader/loader.vala
++++ b/lib/loader/loader.vala
+@@ -1,1 +1,1 @@
+-		private const string AGENT_SO = "frida-agent.so";
++		private const string AGENT_SO = "@@FRIDA_AGENT_SO@@";
+diff --git a/inject/inject.vala b/inject/inject.vala
+index 1111111..2222222 100644
+--- a/inject/inject.vala
++++ b/inject/inject.vala
+@@ -1,1 +1,1 @@
+-		var agent_path = dir + "/frida-agent.so";
++		var agent_path = dir + "/@@FRIDA_AGENT_SO@@";
