@@ -3,11 +3,15 @@ const writeSys = new NativeFunction(Module.getExportByName('libc.so', 'write'), 
 const closeSys = new NativeFunction(Module.getExportByName('libc.so', 'close'), 'int', ['int']);
 const readSys = new NativeFunction(Module.getExportByName('libc.so', 'read'), 'long', ['int', 'pointer', 'long']);
 
+// 注意: 线程名上限 15 字符（TASK_COMM_LEN=16 含结尾 \0），替换名不得超长。
+// gum-js-loop 是最具代表性的 frida 线程名，旧版漏掉了，这里补上；
+// 伪装名优先借用 Android 系统里本来就存在的线程名（Binder/HeapTrim/AsyncTask）。
 const rename_map = {
+    'gum-js-loop': 'Binder:Idle',
     'gmain': 'HeapTrim',
     'gdbus': 'AsyncTask #1',
     'pool-frida': 'AsyncTask #2',
-    'gc-svc3': 'Binder:Idle',
+    'frida-agent': 'AsyncTask #3',
 };
 
 function getThreadName(tid) {
