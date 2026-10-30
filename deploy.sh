@@ -3,7 +3,10 @@
 # 用法: ./deploy.sh [push|start|forward|all]
 set -e
 
-FRIDA_SRC="/Volumes/Shared/ai_reverse/frida_mogai/frida_src"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+# 可用环境变量 FRIDA_MOGAI_SRC 覆盖；默认用仓库内的 frida_src
+# （原作者机器上的路径是 /Volumes/Shared/ai_reverse/frida_mogai/frida_src）
+FRIDA_SRC="${FRIDA_MOGAI_SRC:-$SCRIPT_DIR/frida_src}"
 SERVER_BIN="$FRIDA_SRC/build/subprojects/frida-core/server/frida-server"
 REMOTE_TMP="/data/local/tmp/hluda-tmp"
 REMOTE_BIN="/dev/hluda"

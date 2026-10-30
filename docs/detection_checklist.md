@@ -123,6 +123,24 @@
 
 ---
 
+## 13. 补充检测面（2026-10，据小佳视频与 rusda 文复盘）
+
+| 检测方式 | 原理一句话 | 本项目状态 |
+|---------|-----------|-----------|
+| so 尾页被切 | spawn 门控代码寄生在已有 so 尾页，改 RWX 时该页被切成独立 maps 段；**只要 server 在跑、任何 App 启动都中招**，与注不注入无关 | ❌ server 本体机制问题，脚本/patch 层无解；缓解：走路线 B（ZygiskFrida gadget），不用 server 的 spawn 门控 |
+| libc.so 段数异常 | frida 跑过后 libc.so 映射段变多且出现 RWX 段，关 server、重启 App 都不恢复，重启手机才清 | ❌ 已知无解（360 加固等在用），只能降低使用频率、换机/重启恢复 |
+| pagemap soft-dirty 位 | inline hook 写过代码页后 soft-dirty 位置位，**把字节还原也不清零**，用户态无法伪造 | ❌ 用户态无解；缓解：少用 inline hook，优先 GOT hook / replace / trace（见第 7 节策略），或内核层拦截 pagemap 读取 |
+| soinfo 链表遍历 + CFI | 经 linker 加载的 so 登记在 soinfo 链，遍历可识别；把节点删掉又会与 CFI 元数据对不上 | ⚠️ 本项目未实现自定义 linker 加载（小佳路线）；gadget 模式下 gadget 本身仍在链上，靠改名降命中 |
+| D-Bus AUTH 协议指纹 | 遍历本地端口发 AUTH 握手，frida 回 REJECT 即实锤；改名改端口无效 | ✅ 本项目默认 unix socket 传输、无 TCP 监听，此面不成立；**切勿改回 TCP 监听**（仅剩 /proc/net/tcp 关联查 server 进程一途，已由 0002 改名缓解） |
+| TracerPid 注入窗口 | frida 注入瞬间 TracerPid 置位几百毫秒，检测卡启动窗口读一次就抓 | ✅ 用 spawn_run.py 的 spawn 流程（检测代码运行前 hook 已就位）+ anti_debug.js 的 status 改写；**避免晚 attach** |
+| memfd 路径名 | Frida 17 的 maps 出现 `/memfd:frida-agent (deleted)` | ✅ topatch.py 产物后处理等长替换 memfd 名（16.x 走 0004 的文件名路线） |
+| .rodata 类型名 | strings/内存扫 FridaScriptEngine、GumScript 等明文 | ✅ topatch.py 等长反转（rusda 式），只动 .rodata |
+| GOT 表校验 | 检测方查 GOT 中关键函数地址是否仍落在原 libc 范围，GOT hook 也会现形 | ⚠️ 策略提示：GOT hook 不是免费的，关键函数少而精；被查时换 trace 或内核路线 |
+| unix socket 名全量扫描 | 网传扫 /proc/net/unix 找 frida 的 IPC 名 | ✅ 澄清：普通 App 受 SELinux/权限限制读不到全量 unix 名，且本项目 socket 名已伪装（org.chromium.cache_lock）；此面主要在系统/root 视角才成立 |
+| Java API 变 Native | frida-java-bridge 把被 hook 的 Java 方法改成 native 实现，查方法类型即露；另 libart 函数头被 inline hook（LDR+BR） | ⚠️ 策略提示：能用 native 层就别用 Java.perform；必须用时先按第 3 节方法论定位并掐掉检测线程 |
+
+---
+
 ## 快速排查流程
 
 ```

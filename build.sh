@@ -181,6 +181,15 @@ collect_output() {
     log_info "Artifacts collected in ${OUTPUT_DIR}/"
 }
 
+post_process() {
+    # 产物后处理：.rodata 类型名等长反转 + memfd 显示名替换（见 topatch.py）
+    if [ -f "${SCRIPT_DIR}/topatch.py" ]; then
+        log_info "Post-processing artifacts (topatch.py)..."
+        python3 "${SCRIPT_DIR}/topatch.py" --seed "$(date +%s)" "${OUTPUT_DIR}"/* || \
+            log_warn "topatch failed, continuing with unpatched artifacts"
+    fi
+}
+
 verify_output() {
     log_info "Verifying build artifacts..."
     local has_error=0
@@ -217,11 +226,12 @@ print_summary() {
     echo "  Manifest:      ${BUILD_DIR}/randomize_manifest.json"
     echo "============================================"
     echo
-    echo "Usage:"
-    echo "  # Push server to device"
-    echo "  adb push ${OUTPUT_DIR}/hlserver-arm64 /data/local/tmp/hlserver"
-    echo "  adb shell chmod 755 /data/local/tmp/hlserver"
-    echo "  adb shell /data/local/tmp/hlserver -l 127.0.0.1:8899"
+    echo "Usage (unix socket + spawn, 不要用 TCP 监听，会被端口/协议指纹扫描抓到):"
+    echo "  # 1. Deploy server (unix socket transport)"
+    echo "  ./deploy.sh all"
+    echo
+    echo "  # 2. Spawn target with bypass scripts pre-loaded (recommended)"
+    echo "  python3 scripts/utils/spawn_run.py com.target.app"
     echo
     echo "  # Or use gadget with ZygiskFrida"
     echo "  cp ${OUTPUT_DIR}/hlgadget-arm64.so /path/to/zygisk-module/lib/"
@@ -240,6 +250,7 @@ main() {
     apply_patches
     build_frida
     collect_output
+    post_process
     verify_output
     print_summary
 

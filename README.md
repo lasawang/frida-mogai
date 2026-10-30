@@ -71,11 +71,24 @@ python3 test_zhihu.py 300   # 测试 300 秒存活
 | `libglib-2.0.a` | "pool-%s" → "tsk0-%s" | 线程池线程名 |
 | `libgio-2.0.a` | "gdbus" → "atsvc" | D-Bus 线程名 |
 
-### 运行时脚本（/tmp/hide_all3.js）
+### 运行时脚本（scripts/bypass/，由 spawn_run.py 在 resume 前拼装加载）
 
-- hook `prctl(PR_SET_NAME)` 拦截未来线程命名
-- hook `pthread_setname_np` 同上
-- 延迟扫描重命名已存在的可疑线程
+- hide_threads.js：hook `prctl(PR_SET_NAME)` / `pthread_setname_np` 拦截未来线程命名 + 延迟扫描重命名已存在的可疑线程（含 gum-js-loop → Binder:Idle）
+- anti_debug.js：ptrace 只短路 TRACEME、其余转调原函数；/proc/self/status 的 TracerPid 等长改写
+- anti_frida.js：Java 层检测点处理
+
+### Spawn 路线（推荐，2026-10 新增）
+
+```bash
+./deploy.sh all                                     # unix socket 部署
+python3 scripts/utils/spawn_run.py com.target.app   # spawn + bypass 预装 + 存活监控
+```
+
+spawn 让进程停在门控点先装完全部 bypass 脚本再 resume，检测代码第一次运行时过滤 hook 已就位；attach 是等 App 跑起来再注入，.init_array/JNI_OnLoad 的检测和 TracerPid 注入窗口都躲不掉。**若 spawn 握手失败而 attach 能连，多半是打了 0001（改 frida:rpc）但宿主机 frida-tools 没用同套 patch**——见 docs/troubleshooting.md。
+
+### 产物后处理（topatch.py，rusda 式）
+
+build.sh 在收集产物后自动执行：只动 `.rodata`——类型名（FridaScriptEngine/GumScript 等）等长反转、Frida 17 的 memfd 显示名（frida-agent）等长替换为按构建随机的伪装名。
 
 ### 部署配置
 
